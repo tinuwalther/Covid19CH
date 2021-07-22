@@ -166,7 +166,7 @@ def save_linechart(data, x, y, title, path, output = False):
         title   = title,
         grid    = True,
         legend  = True,
-        figsize = (20,5)
+        figsize = (15,5)
     )
     ### Save chart as png-file
     fig = chart.get_figure()
@@ -186,7 +186,7 @@ if __name__ =="__main__":
     # Initiate variables
     sqlhost   = 'tinuwalther.mysql.pythonanywhere-services.com'
     sqluser   = 'tinuwalther'
-    sqlusrpw  = 'Eq)@UyAQB,}ABFX@53v)'
+    sqlusrpw  = 'your-db-password'
     mydb      = 'tinuwalther$tinu'
     mytable   = 'covid19'
     json_file = '/home/tinuwalther/json/MysqlDB.tinu.covid19.json'
@@ -194,9 +194,8 @@ if __name__ =="__main__":
     # Open database connection
     sqlconnection = MySQLdb.connect(sqlhost,sqluser,sqlusrpw,mydb)
 
-    result = export_json(json_file, sqlconnection, mytable, output = True)
-
     '''
+    #result = export_json(json_file, sqlconnection, mytable, output = True)
     #result = insert_into(sqlconnection, mytable, '19.07.2021', 1552, 29, 4, output = True)
 
     #MysqlDB
@@ -206,9 +205,10 @@ if __name__ =="__main__":
     #MongoDB Atlas
     #json_file = os.path.join('/home/tinuwalther/json', 'MongoDB.Atlas.Covid19.json')
     #import_json(json_file, sqlconnection, mytable, field1="Datum", field2="Neue Fälle", field3="Hospitalisationen", field4="Todesfälle", droptable = True)
+    '''
 
-    covid_data = get_rows(sqlconnection, mytable, output = False)
     #print(covid_data)
+    covid_data = get_rows(sqlconnection, mytable, output = False)
 
     result_of_history = []
     for row in covid_data:
@@ -227,12 +227,12 @@ if __name__ =="__main__":
     count_of_datum = df.Date.count()
     first_value    = str(re.findall(r'\d{4}\-\d{2}\-\d{2}', str(df.Date.values[0]))[0])
     last_value     = str(re.findall(r'\d{4}\-\d{2}\-\d{2}', str(df.Date.values[count_of_datum -1]))[0])
-    #print(f'Total rows: {count_of_datum}, last value: {last_value}')
+    print(f'Total rows: {count_of_datum}, last value: {last_value}')
 
     ### Print data frame set as line chart
-    #save_linechart(df, 'Date', ['Cases'], f"Laborbestätige neu gemeldete Fälle - Stand: {last_value}", '/home/tinuwalther/images/covid-dayli-newcases.png', output = True)
-    #save_linechart(df, 'Date', ['Hosp','Death'], f"Laborbestätige Hospitalisierungen und Todesfälle - Stand: {last_value}", '/home/tinuwalther/images/covid-dayli-host-dead.png', output = True)
-    '''
+    save_linechart(df, "Date", ["Cases","Hosp","Death"], "Laboratory-⁠confirmed cases - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-cases.png", output = True)
+    save_linechart(df, "Date", ["Cases"], "Laboratory-⁠confirmed cases - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-newcases.png", output = True)
+    save_linechart(df, "Date", ["Hosp","Death"], "Laboratory-⁠confirmed hospitalisations and deaths - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-host-dead.png", output = True)
 
     # disconnect from server
     sqlconnection.close()
