@@ -184,17 +184,17 @@ def save_linechart(data, x, y, title, path, output = False):
 if __name__ =="__main__":
 
     # Initiate variables
-    sqlhost   = 'tinuwalther.mysql.pythonanywhere-services.com'
-    sqluser   = 'tinuwalther'
+    sqlhost   = 'your-db-host-address'
+    sqluser   = 'your-db-user'
     sqlusrpw  = 'your-db-password'
-    mydb      = 'tinuwalther$tinu'
-    mytable   = 'covid19'
-    json_file = '/home/tinuwalther/json/MysqlDB.tinu.covid19.json'
+    mydb      = 'your-db-name'
+    mytable   = 'your-db-table'
 
     # Open database connection
     sqlconnection = MySQLdb.connect(sqlhost,sqluser,sqlusrpw,mydb)
 
     '''
+    json_file = '/home/tinuwalther/json/MysqlDB.tinu.covid19.json'
     #result = export_json(json_file, sqlconnection, mytable, output = True)
     #result = insert_into(sqlconnection, mytable, '19.07.2021', 1552, 29, 4, output = True)
 

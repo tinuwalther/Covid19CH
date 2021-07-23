@@ -148,7 +148,7 @@ def save_linechart(data, x, y, title, path, output = False):
 # Discord
 def send_discord_message(data, date):
     '''Send Discord message'''
-    webhook_url         = 'your webhook address'
+    webhook_url         = 'https://discordapp.com/api/webhooks/851028735331008512/JCYUCmlSfAm_Cl0d6mQxyx45RXZae1xR-OU0FIRA8hp1hoMNQzlHx8dHcVSiKeTjB4Fb' #'your webhook address'
     author_name         = 'Covid19 Hook'
     author_avatar       = 'https://i2.pngguru.com/preview/189/787/605/covid19-coronavirus-corona-violet-pink-purple-cartoon-magenta-smile-png-clipart-thumbnail.jpg'
     section_title       = '[INFO] COVID-19 Statistics for SWITZERLAND'
@@ -244,11 +244,11 @@ if __name__ =="__main__":
             print(discord_data)
 
             # Initiate MySQL variables
-            sqlhost   = 'tinuwalther.mysql.pythonanywhere-services.com'
-            sqluser   = 'tinuwalther'
+            sqlhost   = 'your-db-host-address'
+            sqluser   = 'your-db-user'
             sqlusrpw  = 'your-db-password'
-            mydb      = 'tinuwalther$tinu'
-            mytable   = 'covid19'
+            mydb      = 'your-db-name'
+            mytable   = 'your-db-table'
 
             # Open database connection
             sqlconnection = MySQLdb.connect(sqlhost,sqluser,sqlusrpw,mydb)
@@ -284,6 +284,7 @@ if __name__ =="__main__":
                 #save_linechart(df, "Date", ["Cases"], f"Laborbestätige neu gemeldete Fälle - Stand: {last_value}", "/home/tinuwalther/images/covid-dayli-newcases.png", output = True)
                 #save_linechart(df, "Date", ["Hosp","Death"], f"Laborbestätige Hospitalisierungen und Todesfälle - Stand: {last_value}", "/home/tinuwalther/images/covid-dayli-host-dead.png", output = True)
 
+                save_linechart(df, "Date", ["Cases","Hosp","Death"], "Laboratory-⁠confirmed cases - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-cases.png", output = True)
                 save_linechart(df, "Date", ["Cases"], "Laboratory-⁠confirmed cases - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-newcases.png", output = True)
                 save_linechart(df, "Date", ["Hosp","Death"], "Laboratory-⁠confirmed hospitalisations and deaths - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-host-dead.png", output = True)
 
