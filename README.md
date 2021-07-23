@@ -39,7 +39,7 @@ My Python-script queries the API of FOPH for the dayli newl laboratory-⁠confir
 
 ### Scheduled Tasks
 
-The beginner account can create one scheduler. The scheduler expire every month, but it can be extended!
+The beginner account can create one scheduler. The scheduler expire every four weeks, but it can be extended!
 
 The scheduler can run dayli for a beginner account and can schedule Python-scripts to run. And it will be run using the scheduler's default Python version (currrently Python 2.7), to change this behavior add _python3.8 /home/myusername/myproject/myscript.py_ in the task page.
 
