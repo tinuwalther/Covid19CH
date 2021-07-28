@@ -53,6 +53,8 @@ The beginner account can create one Web app _your-username.pythonanywhere.com_. 
 
 There is one flask-based web app hosted on the beginner account, this app only display the two charts with the covid-statistics of Switzerland.
 
+View the web app [tinuwalther.pythonanywhere.com](https://tinuwalther.pythonanywhere.com/).
+
 ## Current reports
 
 The fluctuations in the graphics come from late registrations or from the weekends.

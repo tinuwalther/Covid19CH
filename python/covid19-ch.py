@@ -145,6 +145,124 @@ def save_linechart(data, x, y, title, path, output = False):
     except Exception as e:
         print("[WARN]\t{0}():\t{1}".format(sys._getframe().f_code.co_name, e))
 
+
+def save_sumchart(data, title, path, output = False):
+    '''Create chart and save it to downloads'''
+
+    ### Calculate sum of values
+    sum_of_swiss_people  = 8655118
+    sum_of_new_cases     = int(sum(data.Cases))
+    sum_of_new_hosp      = int(sum(data.Hosp))
+    sum_of_new_dead      = int(sum(data.Death))
+
+    ### Calculate percent of values
+    pct_swiss_people     = "{:.2%}".format(1)
+    pct_new_cases        = "{:.2%}".format(sum_of_new_cases / sum_of_swiss_people)
+    pct_new_hosp         = "{:.2%}".format(sum_of_new_hosp  / sum_of_swiss_people)
+    pct_new_dead         = "{:.2%}".format(sum_of_new_dead  / sum_of_swiss_people)
+
+    ### Create the dictionary
+    sum_pie_dict = {
+        'Summe'  :[sum_of_swiss_people,sum_of_new_cases,sum_of_new_hosp,sum_of_new_dead],
+        'Percent':[pct_swiss_people,pct_new_cases,pct_new_hosp,pct_new_dead]
+    }
+
+    ### Create the data frame set
+    sum_pie_df = pd.DataFrame(data=sum_pie_dict)
+    pie_index  = [
+        f'Total swiss people: {sum_of_swiss_people}',
+        f'Total cases: {sum_of_new_cases}',
+        f'Total hospitalisations: {sum_of_new_hosp}',
+        f'Total deaths: {sum_of_new_dead}'
+    ]
+
+    ### Print out the pie cahrt
+    sum_plot_colors = ['lightgreen', 'yellow', 'orange', 'red']
+    sum_pie_explode = (0,0.3,0.6,2.5)
+    pie = sum_pie_df.plot.pie(
+        title   = title,
+        labels  = pie_index,
+        legend  = True,
+        ylabel  = "", y = 'Summe',
+        autopct = '%1.2f%%',
+        #table   = True,
+        colors  = sum_plot_colors,
+        explode = sum_pie_explode,
+        figsize = (20,5),
+    )
+
+    ### Save chart as png-file
+    fig = pie.get_figure()
+    fig.savefig(f'{path}', facecolor='w', bbox_inches='tight')
+
+    try:
+        if os.path.exists(path):
+            if output:
+                print('[INFO]\t{0}():\tChart saved as {1}'.format(sys._getframe().f_code.co_name, path))
+        else:
+            if output:
+                print('[INFO]\t{0}():\tCould not save chart as {1}'.format(sys._getframe().f_code.co_name, path))
+    except Exception as e:
+        print('[WARN]\t{0}():\t{1}'.format(sys._getframe().f_code.co_name, e))
+
+
+def save_avgchart(data, title, path, output = False):
+    '''Create chart and save it to downloads'''
+
+    ### Calculate sum of values
+    sum_of_new_cases     = int(sum(data.Cases))
+    sum_of_new_hosp      = int(sum(data.Hosp))
+    sum_of_new_dead      = int(sum(data.Death))
+
+    ## Build average of data
+    count_of_datum   = data.Date.count()
+    avg_of_new_cases = int(sum_of_new_cases / count_of_datum)
+    avg_of_new_hosp  = int(sum_of_new_hosp / count_of_datum)
+    avg_of_new_dead  = int(sum_of_new_dead / count_of_datum)
+
+    ## Create the dictionary with avg and sum
+    pie_index   = [
+        f'Average cases: {avg_of_new_cases}',
+        f'Average hospitalisations: {avg_of_new_hosp}',
+        f'Average deaths: {avg_of_new_dead}'
+    ]
+
+    pie_dict = {
+        'Average':[avg_of_new_cases,avg_of_new_hosp,avg_of_new_dead],
+        'Summe'  :[sum_of_new_cases,sum_of_new_hosp,sum_of_new_dead],
+    }
+
+    ### Print out the pie cahrt
+    plot_colors    = ['lightblue', 'orange','red']
+    avg_pie_df = pd.DataFrame(data = pie_dict)
+    avg_pie_explode = (0,0.6,1.4)
+    pie = avg_pie_df.plot.pie(
+        #subplots = True,
+        ylabel  = "", y = 'Average',
+        title   = title,
+        labels  = pie_index,
+        #table   = True,
+        autopct = '%1.2f%%',
+        colors  = plot_colors,
+        explode = avg_pie_explode,
+        figsize = (20,5)
+    )
+
+    ### Save chart as png-file
+    fig = pie.get_figure()
+    fig.savefig(f'{path}', facecolor='w', bbox_inches='tight')
+
+    try:
+        if os.path.exists(path):
+            if output:
+                print('[INFO]\t{0}():\tChart saved as {1}'.format(sys._getframe().f_code.co_name, path))
+        else:
+            if output:
+                print('[INFO]\t{0}():\tCould not save chart as {1}'.format(sys._getframe().f_code.co_name, path))
+    except Exception as e:
+        print('[WARN]\t{0}():\t{1}'.format(sys._getframe().f_code.co_name, e))
+
+
 # Discord
 def send_discord_message(data, date):
     '''Send Discord message'''
@@ -162,10 +280,7 @@ def send_discord_message(data, date):
             {"name" : "Deaths", "value" : data["Deaths"], "inline": "true"},
             {"name" : "Covid19 charts", "value" : "[Tinu's covid19 charts on pythonanywhere.com](https://tinuwalther.pythonanywhere.com/)"},
             {"name" : "Official website", "value" : "[Federal Office of Public Health FOPH | Bundesamt für Gesundheit BAG](https://www.covid19.admin.ch/en/overview?ovTime=total)"}
-        ],
-        'image': {
-            'url': 'https://tinuwalther.pythonanywhere.com/static/images/covid-dayli-host-dead.png'
-        },
+        ]
     }
 
     data = {
@@ -281,12 +396,16 @@ if __name__ =="__main__":
                 last_value     = str(re.findall(r'\d{4}\-\d{2}\-\d{2}', str(df.Date.values[count_of_datum -1]))[0])
 
                 # Print data frame set as line chart
-                #save_linechart(df, "Date", ["Cases"], f"Laborbestätige neu gemeldete Fälle - Stand: {last_value}", "/home/tinuwalther/images/covid-dayli-newcases.png", output = True)
-                #save_linechart(df, "Date", ["Hosp","Death"], f"Laborbestätige Hospitalisierungen und Todesfälle - Stand: {last_value}", "/home/tinuwalther/images/covid-dayli-host-dead.png", output = True)
-
                 save_linechart(df, "Date", ["Cases","Hosp","Death"], "Laboratory-⁠confirmed cases - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-cases.png", output = True)
                 save_linechart(df, "Date", ["Cases"], "Laboratory-⁠confirmed cases - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-newcases.png", output = True)
                 save_linechart(df, "Date", ["Hosp","Death"], "Laboratory-⁠confirmed hospitalisations and deaths - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-host-dead.png", output = True)
+
+                # Print data frame set as pie chart
+                try:
+                    save_sumchart(df, f"Total-overview in relation to the Swiss population since {first_value} - as of: {last_value}", "/home/tinuwalther/mysite/static/images/covid-sum-overview.png", output = True)
+                    save_avgchart(df, f"Average-overview in relation to the number of days since {first_value} - as of: {last_value}", "/home/tinuwalther/mysite/static/images/covid-avg-overview.png", output = True)
+                except Exception as e:
+                    print('[WARN]\t{0}():\t{1}'.format(sys._getframe().f_code.co_name, e))
 
                 # disconnect from server
                 sqlconnection.close()

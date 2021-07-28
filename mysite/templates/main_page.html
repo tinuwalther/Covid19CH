@@ -1,48 +1,40 @@
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-
-        <title>Tinu's covid19 CH</title>
+      <title>Tinu's covid-19 statistics</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </head>
-
     <body>
 
         <div class="container-fluid">
 
-            <!-- nav class="navbar navbar-inverse">
-              <div class="container">
-                <div class="navbar-header">
-                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                  </button>
-                  <a class="navbar-brand" href="#">Covid19 charts of Switzerland, based on the data from BAG</a>
-                </div>
-              </div>
-            </nav -->
-
+            <div class="jumbotron text-center">
+                <h3>Total-overview in relation to the Swiss population</h3>
+            </div>
             <div class="text-center">
-                <p></p>
-                <div class="dayli-cases">
-                    <img src="{{ url_for('static', filename='images/covid-dayli-cases.png') }}" />
-                </div>
+                <img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-sum-overview.png" />
+            </div>
 
-                <p></p>
-                <div class="dayli-newcases">
-                    <img src="{{ url_for('static', filename='images/covid-dayli-newcases.png') }}" />
-                </div>
+            <div class="jumbotron text-center">
+                <h3>Average-overview in relation to the number of days</h3>
+            </div>
+            <div class="text-center">
+                <img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-avg-overview.png" />
+            </div>
 
-                <p></p>
-                <div class="dayli-host-dead">
-                    <img src="{{ url_for('static', filename='images/covid-dayli-host-dead.png') }}" />
-                </div>
-
+            <div class="jumbotron text-center">
+                <h3>Dayli overview</h3>
+            </div>
+            <div class="text-center">
+                <img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-dayli-cases.png" />
+                <br><br>
+                <img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-dayli-newcases.png" />
+                <br><br>
+                <img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-dayli-host-dead.png" />
             </div>
 
         </div>
