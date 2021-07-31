@@ -35,7 +35,7 @@ HTML_TEMPLATE = Template('''
         <!-- Navbar as a heading -->
         <nav Class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top"  >
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Covid-19 Statistics of Switzerland</a>
+                <a class="navbar-brand" href="#">Swiss covid-statistics</a>
                 <button Class="navbar-toggler" data-toggle="collapse" type="button" data-target="#collapsibleNavbar"  >
                     <span Class="navbar-toggler-icon"  ></span>
                 </button>
@@ -47,18 +47,29 @@ HTML_TEMPLATE = Template('''
                         <li class="nav-item">
                             <a class="nav-link" href="#avg">Average</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#overview">Overview</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#cases">Cases</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#hosp">Hospitalisations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#hosp">Deaths</a>
-                        </li>
+
+                        <div class="btn-group">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Daily overview
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <a class="dropdown-item" href="#daily-overview">Overview</a>
+                                <a class="dropdown-item" href="#daily-cases">Confirmed case</a>
+                                <a class="dropdown-item" href="#daily-hosp">Confirmed hospitalisations and deaths</a>
+                            </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Weekly average
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                <a class="dropdown-item" href="#weekly-avg-overview">Average</a>
+                                <a class="dropdown-item" href="#weekly-avg-cases">Average of cases</a>
+                                <a class="dropdown-item" href="#weekly-avg-hosp">Average of hospitalisations and deaths</a>
+                            </div>
+                        </div>
+
                     </ul>
                 </div>
             </div>
@@ -86,9 +97,9 @@ HTML_TEMPLATE = Template('''
                 </span>
             </div>
 
-            <a id="overview"></a>
+            <a id="daily-overview"></a>
             <div class="jumbotron text-center">
-                <h3>Dayli overview of new cases, hospitalisations and deaths</h3>
+                <h3>Daily overview of new cases, hospitalisations and deaths</h3>
                 <hr>
                 <p>They have been supplemented with late, incorrect and duplicate reports from the period from March 2020 to June 2021.</p>
             </div>
@@ -98,9 +109,9 @@ HTML_TEMPLATE = Template('''
                 </span>
             </div>
 
-            <a id="cases"></a>
+            <a id="daily-cases"></a>
             <div class="jumbotron text-center">
-                <h3>Dayli new laboratory-⁠confirmed cases</h3>
+                <h3>Daily new laboratory-⁠confirmed cases</h3>
                 <hr>
                 <p>They have been supplemented with late, incorrect and duplicate reports from the period from March 2020 to June 2021.</p>
             </div>
@@ -110,15 +121,45 @@ HTML_TEMPLATE = Template('''
                 </span>
             </div>
 
-            <a id="hosp"></a>
+            <a id="daily-hosp"></a>
             <div class="jumbotron text-center">
-                <h3>Dayli new laboratory-⁠confirmed hospitalisations and deaths</h3>
+                <h3>Daily new laboratory-⁠confirmed hospitalisations and deaths</h3>
                 <hr>
                 <p>They have been supplemented with late, incorrect and duplicate reports from the period from March 2020 to June 2021.</p>
             </div>
             <div class="text-center">
                 <span>
                     <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-dayli-host-dead.png" /></p>
+                </span>
+            </div>
+
+            <a id="weekly-avg-overview"></a>
+            <div class="jumbotron text-center">
+                <h3>Weekly average of cases, hospitalisations and deaths</h3>
+            </div>
+            <div class="text-center">
+                <span>
+                    <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-weekly-avg-overview.png" /></p>
+                </span>
+            </div>
+
+            <a id="weekly-avg-cases"></a>
+            <div class="jumbotron text-center">
+                <h3>Weekly average of cases</h3>
+            </div>
+            <div class="text-center">
+                <span>
+                    <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-weekly-avg-cases.png" /></p>
+                </span>
+            </div>
+
+            <a id="weekly-avg-hosp"></a>
+            <div class="jumbotron text-center">
+                <h3>Weekly average of hospitalisations and deaths</h3>
+            </div>
+            <div class="text-center">
+                <span>
+                    <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-weekly-avg-host-death.png" /></p>
                 </span>
             </div>
 
