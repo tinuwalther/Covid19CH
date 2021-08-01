@@ -4,7 +4,7 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="author" content="Martin Walther Foto & IT"/>
+        <meta name="author" content={{ author_name }}/>
         <meta name="keywords" content="Covid, Covid19, Covid-19, Covid-Statistics, Covid-Statistics of Switzerland, Coronavirus, BAG, FOPH, Switzerland, Python" />
 
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"  />
@@ -31,32 +31,35 @@
                 </button>
                 <div Id="collapsibleNavbar" Class="collapse navbar-collapse"  >
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
                         <li class="nav-item">
-                            <a class="nav-link" href="#sum">Total</a>
+                            <a class="nav-link" href="#sum">{{ total_overview_nav_title }}</a>
                          </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#avg">Average</a>
+                            <a class="nav-link" href="#avg">{{ avg_overview_nav_title }}</a>
                         </li>
 
+                        <!-- daily overview -->
                         <div class="btn-group">
                             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Daily overview
+                                {{ daily_overview_nav_title }}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <a class="dropdown-item" href="#daily-overview">Overview</a>
-                                <a class="dropdown-item" href="#daily-cases">Confirmed case</a>
-                                <a class="dropdown-item" href="#daily-hosp">Confirmed hospitalisations and deaths</a>
+                                <!-- a class="dropdown-item" href="#daily-cases">Confirmed case</a -->
+                                <a class="dropdown-item" href="#daily-hosp">Hospitalisations and deaths</a>
                             </div>
                         </div>
 
+                        <!-- weekly average -->
                         <div class="btn-group">
                             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Weekly average
+                                {{ weekly_average_nav_title }}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                 <a class="dropdown-item" href="#weekly-avg-overview">Average</a>
-                                <a class="dropdown-item" href="#weekly-avg-cases">Average of cases</a>
-                                <a class="dropdown-item" href="#weekly-avg-hosp">Average of hospitalisations and deaths</a>
+                                <!-- a class="dropdown-item" href="#weekly-avg-cases">Average of cases</a -->
+                                <a class="dropdown-item" href="#weekly-avg-hosp">Hospitalisations and deaths</a>
                             </div>
                         </div>
 
@@ -69,98 +72,87 @@
 
             <a id="sum"></a>
             <div class="jumbotron text-center">
-                <h3>Total-overview in relation to the Swiss population</h3>
+                <h3>{{ total_overview_title }}</h3>
+                <hr>
+                <p>{{ total_overview_text }}</p>
             </div>
             <div class="text-center">
                 <span>
-                    <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-sum-overview.png" /></p>
+                    <p><img class="img-fluid" src={{ total_overview_chart }} /></p>
                 </span>
             </div>
 
             <a id="avg"></a>
             <div class="jumbotron text-center">
-                <h3>Average-overview in relation to the number of days</h3>
+                <h3>{{ avg_overview_title }}</h3>
+                <hr>
+                <p>{{ avg_overview_text }}</p>
             </div>
             <div class="text-center">
                 <span>
-                    <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-avg-overview.png" /></p>
+                    <p><img class="img-fluid" src={{ avg_overview_chart }} /></p>
                 </span>
             </div>
 
             <a id="daily-overview"></a>
             <div class="jumbotron text-center">
-                <h3>Daily overview of new cases, hospitalisations and deaths</h3>
+                <h3>{{ daily_overview_title }}</h3>
                 <hr>
-                <p>They have been supplemented with late, incorrect and duplicate reports from the period from March 2020 to June 2021.</p>
+                <p>{{ daily_overview_text }}</p>
             </div>
             <div class="text-center">
                 <span>
-                    <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-dayli-cases.png" /></p>
-                </span>
-            </div>
-
-            <a id="daily-cases"></a>
-            <div class="jumbotron text-center">
-                <h3>Daily new laboratory-⁠confirmed cases</h3>
-                <hr>
-                <p>They have been supplemented with late, incorrect and duplicate reports from the period from March 2020 to June 2021.</p>
-            </div>
-            <div class="text-center">
-                <span>
-                    <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-dayli-newcases.png" /></p>
+                    <p><img class="img-fluid" src={{ daily_overview_chart }} /></p>
                 </span>
             </div>
 
             <a id="daily-hosp"></a>
             <div class="jumbotron text-center">
-                <h3>Daily new laboratory-⁠confirmed hospitalisations and deaths</h3>
+                <h3>{{ daily_overview_title }}</h3>
                 <hr>
-                <p>They have been supplemented with late, incorrect and duplicate reports from the period from March 2020 to June 2021.</p>
+                <p>{{ daily_new_text }}</p>
             </div>
             <div class="text-center">
                 <span>
-                    <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-dayli-host-dead.png" /></p>
+                    <p><img class="img-fluid" src={{ daily_new_chart }} /></p>
                 </span>
             </div>
 
             <a id="weekly-avg-overview"></a>
             <div class="jumbotron text-center">
-                <h3>Weekly average of cases, hospitalisations and deaths</h3>
+                <h3>{{ weekly_average_title }}</h3>
+                <hr>
+                <p>{{ weekly_average_text_all }}</p>
             </div>
             <div class="text-center">
                 <span>
-                    <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-weekly-avg-overview.png" /></p>
-                </span>
-            </div>
-
-            <a id="weekly-avg-cases"></a>
-            <div class="jumbotron text-center">
-                <h3>Weekly average of cases</h3>
-            </div>
-            <div class="text-center">
-                <span>
-                    <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-weekly-avg-cases.png" /></p>
+                    <p><img class="img-fluid" src={{ weekly_average_chart_all }} /></p>
                 </span>
             </div>
 
             <a id="weekly-avg-hosp"></a>
             <div class="jumbotron text-center">
-                <h3>Weekly average of hospitalisations and deaths</h3>
+                <h3>{{ weekly_average_title }}</h3>
+                <hr>
+                <p>{{ weekly_average_text_spec }}</p>
             </div>
             <div class="text-center">
                 <span>
-                    <p><img class="img-fluid" src="https://tinuwalther.pythonanywhere.com/static/images/covid-weekly-avg-host-death.png" /></p>
+                    <p><img class="img-fluid" src={{ weekly_average_chart }} /></p>
                 </span>
             </div>
 
         </div>
-        <p>
-            <br>
-        </p>
+
+        <div class="text-center">
+            <p>{{ timestamp.strftime("%A, %d %B %Y %X") }} UTC</p>
+        </div>
+
+        <p><br></p>
 
         <nav class="navbar fixed-bottom navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Top</a>Copyright © 2021 Martin Walther
+                <a class="navbar-brand" href="#">Top</a>Copyright © {{ timestamp.strftime("%Y") }} {{ author_name }}
             </div>
         </nav>
 
