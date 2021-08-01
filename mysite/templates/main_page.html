@@ -34,7 +34,7 @@
 
                         <li class="nav-item">
                             <a class="nav-link" href="#sum">{{ total_overview_nav_title }}</a>
-                         </li>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#avg">{{ avg_overview_nav_title }}</a>
                         </li>
@@ -144,17 +144,26 @@
 
         </div>
 
-        <div class="text-center">
-            <p>{{ timestamp.strftime("%A, %d %B %Y %X") }} UTC</p>
+        <div class="container-fluid">
+            <div class="text-center">
+                <p>{{ timestamp.strftime("%A, %d %B %Y %X") }} UTC</p>
+            </div>
         </div>
 
-        <p><br></p>
+        <p><br><hr><br></p>
 
-        <nav class="navbar fixed-bottom navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Top</a>Copyright © {{ timestamp.strftime("%Y") }} {{ author_name }}
-            </div>
-        </nav>
+        <footer>
+            <nav class="navbar fixed-bottom navbar-light bg-light">
+                <div class="container-fluid">
+                    <a href="#" class="text-dark font-weight-bold">TOP</a>
+                    <p>
+                        Copyright © {{ timestamp.strftime("%Y") }}
+                        <a href="https://tinuwalther.github.io/" target="_blank" class="text-dark">{{ author_name }}</a>
+                    </p>
+                    <a href="https://www.covid19.admin.ch/en/overview?ovTime=total" target="_blank" class="text-dark font-weight-bold">BAG</a>
+                </div>
+            </nav>
+        </footer>
 
     </body>
 </html>
