@@ -382,11 +382,11 @@ if __name__ =="__main__":
     dt_weekday     = dt.datetime.strptime(str_today, dt_format).strftime('%A')
 
     # Initiate MySQL variables
-    sqlhost   = 'tinuwalther.mysql.pythonanywhere-services.com'
-    sqluser   = 'tinuwalther'
-    sqlusrpw  = 'Eq)@UyAQB,}ABFX@53v)'
-    mydb      = 'tinuwalther$tinu'
-    mytable   = 'covid19'
+    sqlhost   = 'your-db-host-address'
+    sqluser   = 'your-db-user'
+    sqlusrpw  = 'your-db-password'
+    mydb      = 'your-db-name'
+    mytable   = 'your-db-table'
 
     if dt_weekday == 'Saturday':
         print('[INFO]\tIts ' + dt_weekday + '. We only publish weekly average charts on ' + dt_weekday + '.')
