@@ -146,14 +146,8 @@ def save_linechart(data, x, y, title, path, output = False):
         print("[WARN]\t{0}():\t{1}".format(sys._getframe().f_code.co_name, e))
 
 
-def save_sumchart(data, title, path, output = False):
+def save_sumchart(sum_of_swiss_people, sum_of_new_cases, sum_of_new_hosp, sum_of_new_dead, title, path, output = False):
     '''Create chart and save it to downloads'''
-
-    ### Calculate sum of values
-    sum_of_swiss_people  = 8655118
-    sum_of_new_cases     = int(sum(data.Cases))
-    sum_of_new_hosp      = int(sum(data.Hosp))
-    sum_of_new_dead      = int(sum(data.Death))
 
     ### Calculate percent of values
     pct_swiss_people     = "{:.2%}".format(1)
@@ -178,7 +172,7 @@ def save_sumchart(data, title, path, output = False):
 
     ### Print out the pie cahrt
     sum_plot_colors = ['lightgreen', 'yellow', 'orange', 'red']
-    sum_pie_explode = (0,0.3,0.6,2.5)
+    sum_pie_explode = (0,0.3,0.6,3)
     pie = sum_pie_df.plot.pie(
         title   = title,
         labels  = pie_index,
@@ -206,19 +200,13 @@ def save_sumchart(data, title, path, output = False):
         print('[WARN]\t{0}():\t{1}'.format(sys._getframe().f_code.co_name, e))
 
 
-def save_avgchart(data, title, path, output = False):
+def save_avgchart(count_of_days, sum_of_new_cases, sum_of_new_hosp, sum_of_new_dead, title, path, output = False):
     '''Create chart and save it to downloads'''
 
-    ### Calculate sum of values
-    sum_of_new_cases     = int(sum(data.Cases))
-    sum_of_new_hosp      = int(sum(data.Hosp))
-    sum_of_new_dead      = int(sum(data.Death))
-
     ## Build average of data
-    count_of_datum   = data.Date.count()
-    avg_of_new_cases = int(sum_of_new_cases / count_of_datum)
-    avg_of_new_hosp  = int(sum_of_new_hosp / count_of_datum)
-    avg_of_new_dead  = int(sum_of_new_dead / count_of_datum)
+    avg_of_new_cases = int(sum_of_new_cases / count_of_days)
+    avg_of_new_hosp  = int(sum_of_new_hosp / count_of_days)
+    avg_of_new_dead  = int(sum_of_new_dead / count_of_days)
 
     ## Create the dictionary with avg and sum
     pie_index   = [
@@ -264,13 +252,13 @@ def save_avgchart(data, title, path, output = False):
 
 
 # Discord
-def send_discord_message(data, date):
+def send_discord_message(data, section_description):
     '''Send Discord message'''
     webhook_url         = 'https://discordapp.com/api/webhooks/851028735331008512/JCYUCmlSfAm_Cl0d6mQxyx45RXZae1xR-OU0FIRA8hp1hoMNQzlHx8dHcVSiKeTjB4Fb' #'your webhook address'
     author_name         = 'Covid19 Hook'
     author_avatar       = 'https://i2.pngguru.com/preview/189/787/605/covid19-coronavirus-corona-violet-pink-purple-cartoon-magenta-smile-png-clipart-thumbnail.jpg'
     section_title       = '[INFO] COVID-19 Statistics for SWITZERLAND'
-    section_description = "Information on the current situation, as of " + date
+    #section_description = "Information on the current situation, as of " + date
 
     embeds = {
         "title": section_title, "description": section_description, "color": 32767,
@@ -296,6 +284,55 @@ def send_discord_message(data, date):
         print("[INFO]\t{0}():\tWebhook sent {1}".format(sys._getframe().f_code.co_name, result.status_code))
     else:
         print("[WARN]\t{0}():\tNot sent with {1}, response: {2}".format(sys._getframe().f_code.co_name, result.status_code, result.json()))
+
+def add_weekly_average(data, table, last_value, output = False):
+    '''Create weekly average'''
+    try:
+        end_date   = dt.datetime.strptime(last_value, '%Y-%m-%d')
+        start_date = end_date - dt.timedelta(days=4)
+        print(f'From: {start_date}, to: {end_date}')
+        str_last_value = end_date.strftime("%d.%m.%Y")
+
+        result_of_weekly_average = []
+        for row in data:
+            current_date = dt.datetime.strptime(row[0], '%d.%m.%Y')
+            if end_date >= current_date >= start_date:
+                str_current_date = current_date.strftime("%Y-%m-%d")
+                dt_weekday       = dt.datetime.strptime(str_current_date, "%Y-%m-%d").strftime('%A %d.%m.%Y')
+                thisdict = {
+                    'Date'   : dt_weekday,
+                    'Cases'  : row[1],
+                    'Hosp'   : row[2],
+                    'Death'  : row[3],
+                }
+                result_of_weekly_average.append(thisdict)
+
+        ## Create a data frame set and print out as table
+        df = pd.DataFrame(result_of_weekly_average)
+        print(df)
+
+        sum_weekly_dict = {
+            'Date'   : last_value,
+            'Cases'  : int(sum(df.Cases)/7),
+            'Hosp'   : int(sum(df.Hosp)/7),
+            'Death'  : int(sum(df.Death)/7),
+        }
+
+        if get_table(sqlconnection, table, output = False):
+            pass
+        else:
+            create_table(sqlconnection, table, 'date VARCHAR(10) NOT NULL, cases DECIMAL(8, 2), hosp DECIMAL(8, 2), death DECIMAL(8, 2)', output = False)
+
+        insert_into(sqlconnection, table, str_last_value, (sum(df.Cases)/7), (sum(df.Hosp)/7), (sum(df.Death)/7), output = False)
+
+        if output:
+            print('[INFO]\t{0}():\tWeekly average created {1}'.format(sys._getframe().f_code.co_name, sum_weekly_dict))
+
+        return True
+
+    except Exception as e:
+        print('[WARN]\t{0}():\t{1}'.format(sys._getframe().f_code.co_name, e))
+        return False
 
 # Covid19-CH API
 def get_api_context(url):
@@ -334,18 +371,78 @@ if __name__ =="__main__":
 
     import datetime as dt
 
-    api_url      = "https://www.covid19.admin.ch/api/data"
-    data_version = get_api_context(api_url)
-    last_update  = data_version[0:4] + "-" + data_version[4:6] + "-" + data_version[6:8]
-    dt_format    = "%Y-%m-%d"
-    dt_today     = dt.datetime.today()
-    str_today    = dt_today.strftime(dt_format)
-    dt_weekday   = dt.datetime.strptime(str_today, dt_format).strftime('%A')
-    if dt_weekday == 'Saturday' or dt_weekday == 'Sunday':
-        #print('Its weekend: ' + dt_weekday)
-        pass
+    swiss_people   = 8655118
+    str_first_date = '2020-02-24'
+    api_url        = "https://www.covid19.admin.ch/api/data"
+    data_version   = get_api_context(api_url)
+    last_update    = data_version[0:4] + "-" + data_version[4:6] + "-" + data_version[6:8]
+    dt_format      = "%Y-%m-%d"
+    dt_today       = dt.datetime.today()
+    str_today      = dt_today.strftime(dt_format)
+    dt_weekday     = dt.datetime.strptime(str_today, dt_format).strftime('%A')
+
+    # Initiate MySQL variables
+    sqlhost   = 'tinuwalther.mysql.pythonanywhere-services.com'
+    sqluser   = 'tinuwalther'
+    sqlusrpw  = 'Eq)@UyAQB,}ABFX@53v)'
+    mydb      = 'tinuwalther$tinu'
+    mytable   = 'covid19'
+
+    if dt_weekday == 'Saturday':
+        print('[INFO]\tIts ' + dt_weekday + '. We only publish weekly average charts on ' + dt_weekday + '.')
+        # Open database connection
+        sqlconnection = MySQLdb.connect(sqlhost,sqluser,sqlusrpw,mydb)
+        # Get rows from covid19
+        covid_data = get_rows(sqlconnection, mytable, output = False)
+        result_of_history = []
+        for row in covid_data:
+            thisdict = {
+                'Date'   : datetime.strptime(row[0], "%d.%m.%Y"),
+            }
+            result_of_history.append(thisdict)
+
+        # Create a data frame set
+        df_table_covid19 = pd.DataFrame(result_of_history)
+        count_of_datum = df_table_covid19.Date.count()
+        last_value     = str(re.findall(r'\d{4}\-\d{2}\-\d{2}', str(df_table_covid19.Date.values[count_of_datum -1]))[0])
+
+        ## Add weekly average
+        if add_weekly_average(data=covid_data, table='weekly_average', last_value=dt.datetime.strptime(row[0], '%d.%m.%Y').strftime('%Y-%m-%d'), output = True):
+            ## Get rows from weekly_average
+            weekly_covid_avg = get_rows(sqlconnection, 'weekly_average', output = False)
+            result_of_weekly_average = []
+            for row in weekly_covid_avg:
+                weekly_average_dict = {
+                    'Date'   : dt.datetime.strptime(row[0], '%d.%m.%Y'),
+                    'Cases'  : int(row[1]),
+                    'Hosp'   : int(row[2]),
+                    'Death'  : int(row[3]),
+                }
+                result_of_weekly_average.append(weekly_average_dict)
+
+            ## Create a data frame set and print out as table
+            df_table_average = pd.DataFrame(result_of_weekly_average)
+            print(df_table_average)
+
+            discord_data = {
+                "Cases": int(df_table_average.tail(1).Cases),
+                "Hospitalisations": int(df_table_average.tail(1).Hosp),
+                "Deaths": int(df_table_average.tail(1).Death),
+            }
+            send_discord_message(discord_data, "Weekly average-information on the current situation, as of " + last_value)
+
+            # Print data frame set as line chart
+            save_linechart(df_table_average, "Date", ["Cases","Hosp","Death"], "Weekly-average overview - as of: " + last_value,  "/home/tinuwalther/mysite/static/images/covid-weekly-avg-overview.png", output = True)
+            save_linechart(df_table_average, "Date", ["Hosp","Death"], "Weekly-average of hospitalisations and deaths - as of: " + last_value,  "/home/tinuwalther/mysite/static/images/covid-weekly-avg-host-death.png", output = True)
+
+        # disconnect from server
+        sqlconnection.close()
+
+    elif dt_weekday == 'Sunday':
+        print('[INFO]\tIts ' + dt_weekday + '. We do not publish new data over the weekend.')
+
     else:
-        #print(dt_weekday)
+        print('[INFO]\tIts ' + dt_weekday + '. We publish new data over the week.')
         data_version_url = api_url + "/" + data_version
         if data_version_url:
             cases = get_api_data(data_version_url, "Cases", last_update)
@@ -358,13 +455,6 @@ if __name__ =="__main__":
             }
             print(discord_data)
 
-            # Initiate MySQL variables
-            sqlhost   = 'your-db-host-address'
-            sqluser   = 'your-db-user'
-            sqlusrpw  = 'your-db-password'
-            mydb      = 'your-db-name'
-            mytable   = 'your-db-table'
-
             # Open database connection
             sqlconnection = MySQLdb.connect(sqlhost,sqluser,sqlusrpw,mydb)
 
@@ -372,11 +462,12 @@ if __name__ =="__main__":
             dt_last_update   = dt.datetime.strptime(last_update, dt_format)
             dt_format        = "%d.%m.%Y"
             str_last_update  = dt_last_update.strftime(dt_format)
-            result           = insert_into(sqlconnection, mytable, str_last_update, int(cases.split("\t")[2]), int(hosp.split("\t")[2]), int(death.split("\t")[2]), output = True)
+
+            # Insert new data into the table
+            result = insert_into(sqlconnection, mytable, str_last_update, int(cases.split("\t")[2]), int(hosp.split("\t")[2]), int(death.split("\t")[2]), output = True)
 
             if result:
                 covid_data = get_rows(sqlconnection, mytable, output = False)
-
                 result_of_history = []
                 for row in covid_data:
                     thisdict = {
@@ -388,26 +479,38 @@ if __name__ =="__main__":
                     result_of_history.append(thisdict)
 
                 # Create a data frame set and print out as table
-                df = pd.DataFrame(result_of_history)
-                print(df)
-
-                count_of_datum = df.Date.count()
-                first_value    = str(re.findall(r'\d{4}\-\d{2}\-\d{2}', str(df.Date.values[0]))[0])
-                last_value     = str(re.findall(r'\d{4}\-\d{2}\-\d{2}', str(df.Date.values[count_of_datum -1]))[0])
+                df_table_covid19 = pd.DataFrame(result_of_history)
+                print(df_table_covid19)
 
                 # Print data frame set as line chart
-                save_linechart(df, "Date", ["Cases","Hosp","Death"], "Laboratory-⁠confirmed cases - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-cases.png", output = True)
-                save_linechart(df, "Date", ["Cases"], "Laboratory-⁠confirmed cases - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-newcases.png", output = True)
-                save_linechart(df, "Date", ["Hosp","Death"], "Laboratory-⁠confirmed hospitalisations and deaths - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-host-dead.png", output = True)
-
-                # Print data frame set as pie chart
                 try:
-                    save_sumchart(df, f"Total-overview in relation to the Swiss population since {first_value} - as of: {last_value}", "/home/tinuwalther/mysite/static/images/covid-sum-overview.png", output = True)
-                    save_avgchart(df, f"Average-overview in relation to the number of days since {first_value} - as of: {last_value}", "/home/tinuwalther/mysite/static/images/covid-avg-overview.png", output = True)
+                    count_of_datum = df_table_covid19.Date.count()
+                    first_value    = str(re.findall(r'\d{4}\-\d{2}\-\d{2}', str(df_table_covid19.Date.values[0]))[0])
+                    last_value     = str(re.findall(r'\d{4}\-\d{2}\-\d{2}', str(df_table_covid19.Date.values[count_of_datum -1]))[0])
+
+                    save_linechart(df_table_covid19, "Date", ["Cases","Hosp","Death"], "Laboratory-⁠confirmed cases - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-cases.png", output = True)
+                    save_linechart(df_table_covid19, "Date", ["Hosp","Death"], "Laboratory-⁠confirmed hospitalisations and deaths - as of: " + last_value, "/home/tinuwalther/mysite/static/images/covid-dayli-host-dead.png", output = True)
+                except Exception as e:
+                    print('[WARN]\t{0}():\t{1}'.format(sys._getframe().f_code.co_name, e))
+
+                # Print data set as pie chart
+                try:
+                    total_cases    = int(cases[cases.index("\t")+1:cases.index("\n")])
+                    total_hosp     = int(hosp[hosp.index("\t")+1:hosp.index("\n")])
+                    total_deaths   = int(death[death.index("\t")+1:death.index("\n")])
+                    dt_first_date  = dt.datetime.strptime(str_first_date, "%Y-%m-%d")
+                    dt_last_date   = dt.datetime.strptime(last_update, "%Y-%m-%d")
+                    covid_days     = int((dt_last_date - dt_first_date).days)
+
+                    save_sumchart(swiss_people, total_cases, total_hosp, total_deaths, f"Total-overview in relation to the Swiss population since {str_first_date} - as of: {last_update}", "/home/tinuwalther/mysite/static/images/covid-sum-overview.png", output = True)
+                    save_avgchart(covid_days, total_cases, total_hosp, total_deaths, f"Average-overview in relation to the number of days ({covid_days}) since {str_first_date} - as of: {last_update}", "/home/tinuwalther/mysite/static/images/covid-avg-overview.png", output = True)
                 except Exception as e:
                     print('[WARN]\t{0}():\t{1}'.format(sys._getframe().f_code.co_name, e))
 
                 # disconnect from server
                 sqlconnection.close()
 
-            send_discord_message(discord_data, last_update)
+            try:
+                send_discord_message(discord_data, "Daily information on the current situation, as of " + last_update)
+            except Exception as e:
+                print('[WARN]\t{0}():\t{1}'.format(sys._getframe().f_code.co_name, e))

@@ -64,10 +64,6 @@ Because the FOPH publishes data only from Monday to Friday.
 
 ![Overview](https://tinuwalther.pythonanywhere.com/static/images/covid-dayli-cases.png)
 
-### Only new cases
-
-![Overview](https://tinuwalther.pythonanywhere.com/static/images/covid-dayli-newcases.png)
-
 ### Hospitalisations and deaths
 
 ![Overview](https://tinuwalther.pythonanywhere.com/static/images/covid-dayli-host-dead.png)
